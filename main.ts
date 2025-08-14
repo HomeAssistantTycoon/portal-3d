@@ -121,6 +121,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.orangePortal, function (sprite, 
         }
     }
 })
+scene.onHitWall(SpriteKind.Player, function (sprite, location) {
+    if (tiles.tileAtLocationEquals(location, assets.tile`myTile6`)) {
+        tiles.setWallAt(location, false)
+        doorWatch = true
+    }
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.bluePortal, function (sprite, otherSprite) {
     if (portal_allowed == true && orangePortalExists == true) {
         lastPortal = 2
@@ -934,6 +940,7 @@ function levelSystem () {
 }
 let bluePortalShot: Sprite = null
 let shootingBlue = false
+let doorWatch = false
 let Ididsomethingbluex = false
 let blueSpwanY = 0
 let newBluePortalY = 0
@@ -1083,8 +1090,7 @@ portalPoint.setPosition(80, 59)
 forever(function () {
     if (FLAG1 == true) {
         if (TESTCHAMBER == 1) {
-            tiles.setWallAt(tiles.getTileLocation(0, 8), false)
-            tiles.setTileAt(tiles.getTileLocation(0, 8), assets.tile`myTile`)
+            tiles.setTileAt(tiles.getTileLocation(0, 8), assets.tile`myTile6`)
         }
     }
     if (energyPellet2.tileKindAt(TileDirection.Center, assets.tile`myTile2`)) {
@@ -1134,5 +1140,12 @@ forever(function () {
     if (energyPellet2.lifespan == 0) {
         pause(1000)
         EnergyPellet(0, -100)
+    }
+    if (doorWatch == true) {
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile6`)) {
+        	
+        } else {
+            tiles.setWallAt(tiles.getTileLocation(0, 0), true)
+        }
     }
 })
