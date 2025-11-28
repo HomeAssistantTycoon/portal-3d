@@ -1,0 +1,33 @@
+{
+    "name": "Portal 3D",
+    "description": "",
+    "dependencies": {
+        "device": "*",
+        "pxt-raycasting": "github:neintoes/pxt-raycasting#6f3bd81686da0cc654fb0cff7c5c2bf8528480c3",
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0",
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
+        "Sprite Grid": "github:microsoft/arcade-grid#v1.3.0",
+        "sprite-scaling": "*",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "2.0.62",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "blocksprj"
+}
