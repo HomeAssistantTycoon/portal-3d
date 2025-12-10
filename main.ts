@@ -8,8 +8,8 @@ namespace SpriteKind {
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile7`, function (sprite, location) {
     if (TESTCHAMBER == 1) {
-        tiles.setWallAt(tiles.getTileLocation(2, 8), true)
         tiles.setTileAt(tiles.getTileLocation(2, 8), assets.tile`myTile`)
+        tiles.setWallAt(tiles.getTileLocation(2, 8), true)
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Standing Button Tile B`, function (sprite, location) {
@@ -19,6 +19,23 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`Standing Button Tile B`, func
         Flag_System(3, true)
     }
 })
+function Flag_System (Flag_: number, bool: boolean) {
+    if (Flag_ == 1) {
+        FLAG1 = bool
+    } else if (Flag_ == 2) {
+        FLAG2 = bool
+    } else if (Flag_ == 3) {
+        FLAG3 = bool
+    } else if (Flag_ == 4) {
+        FLAG4 = bool
+    } else if (Flag_ == 5) {
+        FLAG5 = bool
+    } else if (Flag_ == 6) {
+        FLAG6 = bool
+    } else if (Flag_ == 7) {
+        FLAG7 = bool
+    }
+}
 sprites.onOverlap(SpriteKind.energyPellet, SpriteKind.bluePortal, function (sprite, otherSprite) {
     if (pelletAllowed == true && orangePortalExists == true) {
         energyPellet2.x = orangePortal2.x + 0
@@ -893,23 +910,6 @@ scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
         }
     }
 })
-function Flag_System (Flag_: number, bool: boolean) {
-    if (Flag_ == 1) {
-        FLAG1 = bool
-    } else if (Flag_ == 2) {
-        FLAG2 = bool
-    } else if (Flag_ == 3) {
-        FLAG3 = bool
-    } else if (Flag_ == 4) {
-        FLAG4 = bool
-    } else if (Flag_ == 5) {
-        FLAG5 = bool
-    } else if (Flag_ == 6) {
-        FLAG6 = bool
-    } else if (Flag_ == 7) {
-        FLAG7 = bool
-    }
-}
 sprites.onOverlap(SpriteKind.energyPellet, SpriteKind.orangePortal, function (sprite, otherSprite) {
     if (pelletAllowed == true && blueportalexists == true) {
         energyPellet2.x = bluePortal2.x + 0
