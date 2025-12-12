@@ -5,18 +5,19 @@ namespace SpriteKind {
     export const energyPellet = SpriteKind.create()
     export const door = SpriteKind.create()
     export const button = SpriteKind.create()
+    export const Grill = SpriteKind.create()
+    export const cube = SpriteKind.create()
 }
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile7`, function (sprite, location) {
-    if (TESTCHAMBER == 1) {
-        tiles.setTileAt(tiles.getTileLocation(2, 8), assets.tile`myTile`)
-        tiles.setWallAt(tiles.getTileLocation(2, 8), true)
-    }
-})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Standing Button Tile B`, function (sprite, location) {
     Press_Button_A.setFlag(SpriteFlag.Invisible, false)
     shoot = false
     if (controller.A.isPressed()) {
         Flag_System(3, true)
+    }
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Grill, function (sprite, otherSprite) {
+    if (!(sprite == energyPellet2)) {
+        sprites.destroy(sprite)
     }
 })
 function Flag_System (Flag_: number, bool: boolean) {
@@ -36,6 +37,15 @@ function Flag_System (Flag_: number, bool: boolean) {
         FLAG7 = bool
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Grill, function (sprite, otherSprite) {
+    sprites.destroyAllSpritesOfKind(SpriteKind.bluePortal)
+    sprites.destroyAllSpritesOfKind(SpriteKind.orangePortal)
+    music.play(music.createSoundEffect(WaveShape.Noise, 1, 5000, 255, 0, 500, SoundExpressionEffect.Vibrato, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
+    color.startFade(color.originalPalette, color.GrayScale, 100)
+    game.gameOver(false)
+})
 sprites.onOverlap(SpriteKind.energyPellet, SpriteKind.bluePortal, function (sprite, otherSprite) {
     if (pelletAllowed == true && orangePortalExists == true) {
         energyPellet2.x = orangePortal2.x + 0
@@ -212,12 +222,27 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.bluePortal, function (sprite, ot
         }
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`End level`, function (sprite, location) {
+    if (TESTCHAMBER == 1) {
+        tiles.setTileAt(tiles.getTileLocation(3, 8), assets.tile`myTile`)
+        tiles.setWallAt(tiles.getTileLocation(3, 8), true)
+        sprites.destroyAllSpritesOfKind(SpriteKind.bluePortal)
+        sprites.destroyAllSpritesOfKind(SpriteKind.orangePortal)
+    } else if (TESTCHAMBER == 2) {
+        tiles.setTileAt(tiles.getTileLocation(20, 6), assets.tile`myTile`)
+        tiles.setWallAt(tiles.getTileLocation(20, 6), true)
+    }
+    levelSystem()
+})
 scene.onHitWall(SpriteKind.energyPellet, function (sprite, location) {
     if (tiles.tileAtLocationEquals(location, assets.tile`myTile4`)) {
         tiles.setTileAt(location, assets.tile`myTile3`)
         sprites.destroy(sprite)
         Flag_System(1, true)
     }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.cube, function (sprite, otherSprite) {
+	
 })
 function EnergyPellet (Initvx: number, Initvy: number) {
     for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
@@ -910,6 +935,11 @@ scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
         }
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`Basic Floor0`, function (sprite, location) {
+    if (TESTCHAMBER == 2) {
+        button2 = true
+    }
+})
 sprites.onOverlap(SpriteKind.energyPellet, SpriteKind.orangePortal, function (sprite, otherSprite) {
     if (pelletAllowed == true && blueportalexists == true) {
         energyPellet2.x = bluePortal2.x + 0
@@ -938,12 +968,29 @@ sprites.onOverlap(SpriteKind.energyPellet, SpriteKind.orangePortal, function (sp
     pelletAllowed = true
 })
 function levelSystem () {
+    FLAG1 = false
+    FLAG2 = false
+    FLAG3 = false
+    FLAG4 = false
+    FLAG5 = false
+    FLAG6 = false
+    FLAG7 = false
+    TESTCHAMBER += 1
     if (TESTCHAMBER == 1) {
         Max = 234
         Min = 21
         tiles.setCurrentTilemap(tilemap`level3`)
         Render.setCeilingTilemap(tilemap`level12`)
+        tiles.placeOnRandomTile(mySprite, assets.tile`Start level`)
         EnergyPellet(0, -100)
+    } else if (TESTCHAMBER == 2) {
+        tiles.setCurrentTilemap(tilemap`level5`)
+        Render.setCeilingTilemap(tilemap`level6`)
+        tiles.placeOnRandomTile(mySprite, assets.tile`Start level`)
+    } else if (TESTCHAMBER == 3) {
+        tiles.setCurrentTilemap(tilemap`level0`)
+        Render.setCeilingTilemap(tilemap`level6`)
+        tiles.placeOnRandomTile(mySprite, assets.tile`Start level`)
     }
     Standing_Button_A = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -981,6 +1028,67 @@ function levelSystem () {
         . . . . . . . 1 1 . . . . . . . 
         . . . . . . 1 1 1 1 . . . . . . 
         `, SpriteKind.button)
+    for (let value2 of tiles.getTilesByType(assets.tile`Basic Floor1`)) {
+        Material_Emancipation_Grill = sprites.create(img`
+            . 9 9 . . . 9 . 9 9 . . 9 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 9 . . . 9 9 9 . 9 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 9 9 9 9 . . 9 9 9 . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 . 9 9 9 . . . . 9 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 . 9 9 9 9 . . 9 9 9 . . 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 . 9 9 . . . 9 9 . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 . . . 9 9 9 . . 9 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 . . . 9 9 9 . . . . 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Grill)
+        tiles.placeOnTile(Material_Emancipation_Grill, value2)
+        animation.runImageAnimation(
+        Material_Emancipation_Grill,
+        [img`
+            . 9 9 . . . 9 . 9 9 . . 9 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 9 . . . 9 9 9 . 9 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 9 9 9 9 . . 9 9 9 . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 . 9 9 9 . . . . 9 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 . 9 9 9 9 . . 9 9 9 . . 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 . 9 9 . . . 9 9 . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 . . . 9 9 9 . . 9 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 . . . 9 9 9 . . . . 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . 9 9 . . . 9 . 9 9 . . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . . 9 9 9 9 . . . 9 9 9 . 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 9 9 9 9 9 . . 9 9 9 . 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 . 9 9 . 9 9 9 . . . . 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . . 9 9 9 . 9 9 9 9 . . 9 9 9 . 
+            . . . . . . . . . . . . . . . . 
+            9 . 9 9 9 . 9 9 . . . 9 9 . 9 9 
+            . . . . . . . . . . . . . . . . 
+            9 9 9 9 . . . 9 9 9 . . 9 9 9 9 
+            . . . . . . . . . . . . . . . . 
+            . 9 9 9 . . . 9 9 9 . . . . 9 9 
+            . . . . . . . . . . . . . . . . 
+            `],
+        500,
+        true
+        )
+    }
     tiles.placeOnRandomTile(Standing_Button_B, assets.tile`Standing Button Tile B`)
     tiles.placeOnRandomTile(Standing_Button_A, assets.tile`Standing Button Tile A`)
 }
@@ -1023,9 +1131,12 @@ function FlagAction () {
     }
 }
 let orangPortalShot: Sprite = null
+let Material_Emancipation_Grill: Sprite = null
 let Standing_Button_B: Sprite = null
 let Standing_Button_A: Sprite = null
+let button2 = false
 let shootingOrange = false
+let TESTCHAMBER = 0
 let bluePortalShot: Sprite = null
 let shootingBlue = false
 let Ididsomethingbluex = false
@@ -1045,12 +1156,8 @@ let Max = 0
 let Min = 0
 let bluePortal2: Sprite = null
 let orangePortal2: Sprite = null
-let energyPellet2: Sprite = null
 let orangePortalExists = false
 let pelletAllowed = false
-let shoot = false
-let Press_Button_A: TextSprite = null
-let mySprite: Sprite = null
 let FLAG7 = false
 let FLAG6 = false
 let FLAG5 = false
@@ -1058,18 +1165,11 @@ let FLAG4 = false
 let FLAG3 = false
 let FLAG2 = false
 let FLAG1 = false
-let TESTCHAMBER = 0
-TESTCHAMBER = 1
-FLAG1 = false
-FLAG2 = false
-FLAG3 = false
-FLAG4 = false
-FLAG5 = false
-FLAG6 = false
-FLAG7 = false
-levelSystem()
+let energyPellet2: Sprite = null
+let shoot = false
+let Press_Button_A: TextSprite = null
+let mySprite: Sprite = null
 mySprite = Render.getRenderSpriteVariable()
-tiles.placeOnRandomTile(mySprite, assets.tile`myTile1`)
 let portalPoint = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -1191,8 +1291,21 @@ Press_Button_A = textsprite.create("Press Button (A)", 0, 9)
 Press_Button_A.setPosition(77, 91)
 Press_Button_A.setFlag(SpriteFlag.RelativeToCamera, true)
 Press_Button_A.setFlag(SpriteFlag.Invisible, true)
+levelSystem()
 forever(function () {
     FlagAction()
+    if (!(mySprite.tileKindAt(TileDirection.Center, assets.tile`Basic Floor0`))) {
+        button2 = false
+    }
+    if (TESTCHAMBER == 2) {
+        if (button2 == true) {
+            tiles.setTileAt(tiles.getTileLocation(18, 7), assets.tile`Basic Floor`)
+            tiles.setWallAt(tiles.getTileLocation(18, 7), false)
+        } else if (button2 == false) {
+            tiles.setTileAt(tiles.getTileLocation(18, 7), assets.tile`myTile5`)
+            tiles.setWallAt(tiles.getTileLocation(18, 7), true)
+        }
+    }
     if (!(mySprite.tileKindAt(TileDirection.Center, assets.tile`Standing Button Tile B`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`Standing Button Tile A`))) {
         shoot = true
         Press_Button_A.setFlag(SpriteFlag.Invisible, true)
